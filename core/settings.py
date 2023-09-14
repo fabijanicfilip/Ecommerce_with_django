@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+gmyp!055w)dn$fiwcxxno7&ok-5vv-s*3vj$jhnrxy4&^#p*^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['yourdomain.com', '127.0.0.1']
+ALLOWED_HOSTS = ['yourdomain.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -41,6 +41,9 @@ INSTALLED_APPS = [
 
     'store',
     'basket',
+    'account',
+    'payment',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +120,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -129,7 +136,19 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+# Basket session ID
+BASKET_SESSION_ID = 'basket'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Custom user model
+AUTH_USER_MODEL = 'account.UserBase'
+LOGIN_REDIRECT_URL = '/account/dashboard'
+LOGIN_URL = '/account/login'
+
+# Email setting
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Stripe Payment
+PUBLISHABLE_KEY = 'pk_test_51NpvntBpdAsb7R8ii6kbCAtYXFDy2hGDWqc6FCay394XmihAdyIA8DqTevWzXtRI2j94N3RHhAj0KfBhFs26WGws002Lvlq9R6'
+SECRET_KEY = 'sk_test_51NpvntBpdAsb7R8iYPKc7yXwvk0a4Hj9roqizeAx0nS7SMEm6SqsMfiEI8mCxvIMRCGltmbyXPawhCpk6PSqh34u00C6T0rtmS'
+STRIPE_ENDPOINT_SECRET = 'whsec_138d84b1f6855afec50a27ecbf36405b9cecb1443548ab82ccd508172af7df38'
+# stripe listen --forward-to Localhost:8000/payment/webhook/

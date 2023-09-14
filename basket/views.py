@@ -11,7 +11,7 @@ def basket_summary(request):
     context = {
         'basket': basket,
     }
-    return render(request, 'store/basket/summary.html', context)
+    return render(request, 'basket/summary.html', context)
 
 
 def basket_add(request):
