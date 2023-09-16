@@ -6,7 +6,7 @@ from store.models import Product
 
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='order_user')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="order_user")
     full_name = models.CharField(max_length=50)
     address1 = models.CharField(max_length=250)
     address2 = models.CharField(max_length=250)
@@ -20,18 +20,17 @@ class Order(models.Model):
     billing_status = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ('-created', )
+        ordering = ("-created",)
 
     def __str__(self):
         return str(self.created)
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="order_items")
     price = models.DecimalField(max_digits=5, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return str(self.id)
-

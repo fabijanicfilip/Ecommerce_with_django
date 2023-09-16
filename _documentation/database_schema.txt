@@ -1,0 +1,63 @@
+https://dbdiagram.io/d/Ecommerce_database_structure-65059a6a02bd1c4a5eb0c382
+
+Table Product {
+  id integer [pk, increment]
+  product_type integer
+  category integer
+  description varchar
+  slug slug
+  regular_price decimal
+  discount_price decimal
+  is_active boolean
+  created_at timestamp
+  updated_at timestamp 
+}
+
+Table ProductImage {
+  id integer [pk, increment]
+  product integer
+  image image
+  alt_text varchar
+  is_feature boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table Category_MPTT {
+  id integer [pk, increment]
+  name varchar
+  slug slug
+  parent varchar
+  is_active boolean
+}
+
+Table ProductType {
+  id integer [pk, increment]
+  name varchar
+  is_active boolean
+}
+
+Table ProductSpecification {
+  id integer [pk, increment]
+  product_type integer
+  name varchar
+}
+
+Table ProductSpecificationValue {
+  id integer [pk, increment]
+  product integer
+  specification integer
+  value varchar
+}
+
+Ref: Product.id < ProductImage.product
+
+Ref: Product.id < ProductSpecificationValue.product
+
+Ref: Product.product_type > ProductType.id
+
+Ref: Product.category > Category_MPTT.id
+
+Ref: ProductType.id < ProductSpecification.product_type
+
+Ref: ProductSpecification.id < ProductSpecificationValue.specification

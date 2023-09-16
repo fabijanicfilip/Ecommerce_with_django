@@ -18,14 +18,14 @@ from orders.views import user_orders
 def dashboard(request):
     orders = user_orders(request)
     context = {
-        'orders': orders,
+        "orders": orders,
     }
-    return render(request, 'account/dashboard/dashboard.html', context)
+    return render(request, "account/dashboard/dashboard.html", context)
 
 
 @login_required
 def edit_details(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user_form = UserEditForm(instance=request.user, data=request.POST)
 
         if user_form.is_valid():
@@ -34,9 +34,9 @@ def edit_details(request):
         user_form = UserEditForm(instance=request.user)
 
     context = {
-        'user_form': user_form,
+        "user_form": user_form,
     }
-    return render(request, 'account/dashboard/edit_details.html', context)
+    return render(request, "account/dashboard/edit_details.html", context)
 
 
 @login_required
@@ -45,57 +45,59 @@ def delete_user(request):
     user.is_active = False
     user.save()
     logout(request)
-    return redirect('account:delete_confirmation')
+    return redirect("account:delete_confirmation")
 
 
 def account_register(request):
     """if request.user.is_authenticated:
-        return redirect('/')"""
-    
-    if request.method == 'POST':
+    return redirect('/')"""
+
+    if request.method == "POST":
         registerForm = RegistrationForm(request.POST)
         if registerForm.is_valid():
             user = registerForm.save(commit=False)
-            user.email = registerForm.cleaned_data['email']
-            user.user_name = registerForm.cleaned_data['user_name']
-            user.set_password(registerForm.cleaned_data['password'])
+            user.email = registerForm.cleaned_data["email"]
+            user.user_name = registerForm.cleaned_data["user_name"]
+            user.set_password(registerForm.cleaned_data["password"])
             user.is_active = False
             user.save()
             # Setup email
             current_site = get_current_site(request)
-            subject = 'Activate your Account'
-            message = render_to_string('account/registration/account_activation_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
+            subject = "Activate your Account"
+            message = render_to_string(
+                "account/registration/account_activation_email.html",
+                {
+                    "user": user,
+                    "domain": current_site.domain,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": account_activation_token.make_token(user),
+                },
+            )
             user.email_user(subject=subject, message=message)
             context = {
-                'form': registerForm,
+                "form": registerForm,
             }
-            return render(request, 'account/registration/register_account_confirm.html', context)
-    
+            return render(request, "account/registration/register_account_confirm.html", context)
+
     else:
         registerForm = RegistrationForm()
 
     context = {
-        'form': registerForm,
+        "form": registerForm,
     }
-    return render(request, 'account/registration/register.html', context)
+    return render(request, "account/registration/register.html", context)
 
 
 def account_activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = UserBase.objects.get(pk=uid)
-    except():
+    except ():
         pass
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('account:dashboard')
+        return redirect("account:dashboard")
     else:
-        return render(request, 'account/registration/activation_invalid.html')
-    
+        return render(request, "account/registration/activation_invalid.html")

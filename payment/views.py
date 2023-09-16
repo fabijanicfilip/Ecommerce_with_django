@@ -16,28 +16,24 @@ from orders.views import payment_confirmation
 def BasketView(request):
     basket = Basket(request)
     total = str(basket.get_total_price())
-    total = total.replace('.', '')
+    total = total.replace(".", "")
     total = int(total)
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    intent = stripe.PaymentIntent.create(
-        amount=total,
-        currency='gbp',
-        metadata={'userid': request.user.id}
-    )
+    intent = stripe.PaymentIntent.create(amount=total, currency="gbp", metadata={"userid": request.user.id})
 
     context = {
-        'client_secret': intent.client_secret,
-        'STRIPE_PUBLISHABLE_KEY': os.environ.get('STRIPE_PUBLISHABLE_KEY'),
+        "client_secret": intent.client_secret,
+        "STRIPE_PUBLISHABLE_KEY": os.environ.get("STRIPE_PUBLISHABLE_KEY"),
     }
-    return render(request, 'payment/payment_form.html', context)
+    return render(request, "payment/payment_form.html", context)
 
 
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
     event = None
-    print('123123123')
+    print("123123123")
 
     try:
         event = stripe.Event.construct_from(json.loads(payload), stripe.api_key)
@@ -46,15 +42,15 @@ def stripe_webhook(request):
         return HttpResponse(status=400)
 
     # Handle the event
-    if event.type == 'payment_intent.succeeded':
+    if event.type == "payment_intent.succeeded":
         payment_confirmation(event.data.object.client_secret)
     else:
-        print('Unhandled event type {}'.format(event.type))
-    
+        print("Unhandled event type {}".format(event.type))
+
     return HttpResponse(status=200)
 
 
 def order_placed(request):
     basket = Basket(request)
     basket.clear()
-    return render(request, 'payment/orderplaced.html')
+    return render(request, "payment/orderplaced.html")
