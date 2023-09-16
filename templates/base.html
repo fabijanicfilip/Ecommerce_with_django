@@ -10,17 +10,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'basket/css/basket.css' %}">
-    <link rel="stylesheet" href="{% static 'account/css/register.css' %}">
-    <link rel="stylesheet" href="{% static 'account/css/login.css' %}">
-    <link rel="stylesheet" href="{% static 'account/css/edit_details.css' %}">
-    <link rel="stylesheet" href="{% static 'account/css/delete_confirm.css' %}">
-    <link rel="stylesheet" href="{% static 'account/css/password_reset_form.css' %}">
-    <link rel="stylesheet" href="{% static 'account/css/reset_status.css' %}">
     {% block style %}{% endblock %}
-    <title>{% block title %}BookStore{% endblock %}</title>
+    <title>{% block title %}Store{% endblock %}</title>
 </head>
-
 
 <body>
     <header class="pb-3">
@@ -38,7 +30,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-none d-md-block fw500" href="#" id="navbarDropdown"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Library
+                                All
                                 <i class="ps-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
@@ -46,7 +38,7 @@
                                     </svg></i>
                             </a>
                             <ul class="dropdown-menu rounded-0 border-0" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% url "store:product_all" %}">All</a></li>
+                                <li><a class="dropdown-item" href="{% url 'store:store_home' %}">All</a></li>
                                 {% for c in categories %}
                                 <li {% if category.slug == c.slug %}class="selected" {% endif %}>
                                     <a class="dropdown-item" href="{{ c.get_absolute_url }}">{{ c.name|title }}</a>
@@ -135,7 +127,7 @@
                 <div class="d-md-none d-lg-none d-xl-none">
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                            <li><a class="dropdown-item" href="{% url 'store:product_all' %}">All</a></li>
+                            <li><a class="dropdown-item" href="{% url 'store:store_home' %}">All</a></li>
                             {% for c in categories %}
                             <li {% if category.slug == c.slug %}class="selected" {% endif %}>
                                 <a class="dropdown-item" href="{{ c.get_absolute_url }}">{{ c.name|title }}</a>
@@ -153,7 +145,9 @@
         </nav>
     </header>
 
-    <div id="content">{% block content %} {% endblock %}</div>
+    <main class="pt-5">
+        <div id="content">{% block content %} {% endblock %}</div>
+    </main>
 
     <footer class="container py-5 footer">
         <hr>
@@ -164,7 +158,7 @@
                     <path
                         d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z" />
                 </svg>
-                <small class="d-block mb-3 text-muted">&copy; 2017-2021</small>
+                <small class="d-block mb-3 text-muted">&copy; 2021-2023</small>
             </div>
             <div class="col-6 col-md fs15">
                 <h5>Features</h5>

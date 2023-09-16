@@ -8,17 +8,17 @@ def product_all(request):
     context = {
         'products': products,
     }
-    return render(request, 'store/home.html', context)
+    return render(request, 'store/index.html', context)
 
 
 def category_list(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    products = Product.objects.filter(category=category)
+    products = Product.products.filter(category=category)
     context = {
         'category': category,
         'products': products,
     }
-    return render(request, 'store/products/category.html', context)
+    return render(request, 'store/category.html', context)
 
 
 def product_detail(request, slug):
@@ -26,5 +26,5 @@ def product_detail(request, slug):
     context = {
         'product': product,
     }
-    return render(request, 'store/products/single.html', context)
+    return render(request, 'store/single.html', context)
 

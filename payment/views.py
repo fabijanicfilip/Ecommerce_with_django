@@ -1,11 +1,12 @@
 import json
+import os
 
 import stripe
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-# from django.views.generic.base import TemplateView
+from django.conf import settings
 
 from basket.basket import Basket
 from orders.views import payment_confirmation
@@ -18,9 +19,7 @@ def BasketView(request):
     total = total.replace('.', '')
     total = int(total)
 
-    print(total)
-
-    stripe.api_key = 'sk_test_51NpvntBpdAsb7R8iYPKc7yXwvk0a4Hj9roqizeAx0nS7SMEm6SqsMfiEI8mCxvIMRCGltmbyXPawhCpk6PSqh34u00C6T0rtmS'
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     intent = stripe.PaymentIntent.create(
         amount=total,
         currency='gbp',
@@ -29,8 +28,9 @@ def BasketView(request):
 
     context = {
         'client_secret': intent.client_secret,
+        'STRIPE_PUBLISHABLE_KEY': os.environ.get('STRIPE_PUBLISHABLE_KEY'),
     }
-    return render(request, 'payment/home.html', context)
+    return render(request, 'payment/payment_form.html', context)
 
 
 @csrf_exempt

@@ -20,7 +20,7 @@ def dashboard(request):
     context = {
         'orders': orders,
     }
-    return render(request, 'account/user/dashboard.html', context)
+    return render(request, 'account/dashboard/dashboard.html', context)
 
 
 @login_required
@@ -36,7 +36,7 @@ def edit_details(request):
     context = {
         'user_form': user_form,
     }
-    return render(request, 'account/user/edit_details.html', context)
+    return render(request, 'account/dashboard/edit_details.html', context)
 
 
 @login_required
@@ -57,6 +57,7 @@ def account_register(request):
         if registerForm.is_valid():
             user = registerForm.save(commit=False)
             user.email = registerForm.cleaned_data['email']
+            user.user_name = registerForm.cleaned_data['user_name']
             user.set_password(registerForm.cleaned_data['password'])
             user.is_active = False
             user.save()
@@ -70,7 +71,10 @@ def account_register(request):
                 'token': account_activation_token.make_token(user),
             })
             user.email_user(subject=subject, message=message)
-            return HttpResponse('registered succesfully and activation sent')
+            context = {
+                'form': registerForm,
+            }
+            return render(request, 'account/registration/register_account_confirm.html', context)
     
     else:
         registerForm = RegistrationForm()

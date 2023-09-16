@@ -1,0 +1,44 @@
+{% extends "./sub_base.html" %}
+{% load static %}
+
+{% block title %}Log-in{% endblock %}
+
+{% block sub_content %}
+
+<form class="account-form" action="{% url 'account:login' %}" method="post">
+
+    {% csrf_token %}
+    <h3 class="mb-4 fw-bold">Sign In</h3>
+
+    {% if form.errors %}
+    <div class="alert alert-primary" role="alert">
+        Error: Username or Password not correct!
+    </div>
+    {% endif %}
+
+    <label class="form-label">{{ form.username.label}}</label>
+    {{ form.username}}
+
+    <label class="form-label">{{ form.password.label}}</label>
+    {{ form.password}}
+    <div class="d-grid gap-2">
+        <input type="hidden" name="next" value="{{ next }}">
+        <button class="btn btn-primary py-2 mb-4 mt-5 fw-bold" type="submit" value="Log-in">Sign in
+        </button>
+    </div>
+    <br>
+    <hr>
+    <div class="flex-column justify-content-center mx-auto pb-3">
+        <div class="text-center">
+            <p class="small mb-1">Don't have an account yet?</p>
+            <a href="{% url 'account:register' %}">Create an account</a>
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'account:pwdreset' %}">Forgotten Password?</a>
+        </div>
+    </div>
+</form>
+
+                     
+
+{% endblock %}
