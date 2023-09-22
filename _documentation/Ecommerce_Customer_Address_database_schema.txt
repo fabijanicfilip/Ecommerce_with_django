@@ -1,0 +1,25 @@
+Table Customer as CTR {
+  id int [pk, increment]
+  email email
+  name varchar(150)
+  mobile varchar(20)
+  password password
+  is_active boolean
+  is_staff boolean
+  create_at timestamp
+  updated_at timestamp
+}
+
+Table Address as A {
+  id int [pk, increment]
+  customer varchar
+  country_region varchar
+  full_name varchar
+  phone varchar(20)
+  postcode varchar
+  address_line varchar
+  address_line2 varchar
+  town_city varchar
+}
+
+Ref: A.id > CTR.id
