@@ -3,13 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
+from django.contrib import messages
+
 from .forms import RegistrationForm, UserEditForm, UserAddressForm
 from .models import Customer, Address
+from store.models import Product
 from .tokens import account_activation_token
 from orders.views import user_orders
 
@@ -155,7 +158,7 @@ def edit_address(request, id):
 @login_required
 def delete_address(request, id):
     address = Address.objects.get(pk=id, customer=request.user).delete()
-    return redirect('account:addresses')
+    return redirect("account:addresses")
 
 
 @login_required
@@ -164,4 +167,28 @@ def set_default(request, id):
     Address.objects.filter(customer=request.user, default=True).update(default=False)
     # Stavljanje trenutne adrese (filtrirane id-em) u True, tako da je ta dresa nova default adresa
     Address.objects.filter(pk=id, customer=request.user).update(default=True)
-    return redirect('account:addresses')
+    return redirect("account:addresses")
+
+
+# Whishlist
+
+
+@login_required
+def wishlist(request):
+    wishlist = Product.objects.filter(users_wishlist=request.user)
+    context = {
+        "wishlist": wishlist,
+    }
+    return render(request, "account/dashboard/user_wish_list.html", context)
+
+
+@login_required
+def add_to_wishlist(request, id):
+    product = get_object_or_404(Product, id=id)
+    if product.users_wishlist.filter(id=request.user.id).exists():
+        product.users_wishlist.remove(request.user)
+        messages.success(request, product.title + " has been removed from your WishList")
+    else:
+        product.users_wishlist.add(request.user)
+        messages.success(request, "Added " + product.title + " to your Wishlist")
+    return HttpResponseRedirect(request.META["HTTP_REFERER"])

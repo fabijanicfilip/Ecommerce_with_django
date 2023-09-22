@@ -1,5 +1,3 @@
-https://dbdiagram.io/d/Ecommerce_database_structure-65059a6a02bd1c4a5eb0c382
-
 Table Product {
   id integer [pk, increment]
   product_type integer
