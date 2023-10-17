@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from django.contrib import messages
 
+from orders.models import Order
 from .forms import RegistrationForm, UserEditForm, UserAddressForm
 from .models import Customer, Address
 from store.models import Product
@@ -167,6 +168,12 @@ def set_default(request, id):
     Address.objects.filter(customer=request.user, default=True).update(default=False)
     # Stavljanje trenutne adrese (filtrirane id-em) u True, tako da je ta dresa nova default adresa
     Address.objects.filter(pk=id, customer=request.user).update(default=True)
+
+    # Ovo je da tokom checkout promjene default adrese redirect ne vodi u account vec ostaje na istoj stranici u checkoutu
+    previous_url = request.META.get("HTTP_REFERER")
+    if "delivery_address" in previous_url:
+        return redirect("checkout:delivery_address")
+    
     return redirect("account:addresses")
 
 
@@ -192,3 +199,13 @@ def add_to_wishlist(request, id):
         product.users_wishlist.add(request.user)
         messages.success(request, "Added " + product.title + " to your Wishlist")
     return HttpResponseRedirect(request.META["HTTP_REFERER"])
+
+
+@login_required
+def user_orders(request):
+    user_id = request.user.id
+    orders = Order.objects.filter(user_id=user_id).filter(billing_status=True)
+    context = {
+        "orders": orders,
+    }
+    return render(request, "account/dashboard/user_orders.html", context)

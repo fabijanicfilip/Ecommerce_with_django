@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     "store",
     "basket",
     "account",
-    "payment",
+    # "payment",
     "orders",
     "mptt",
+    "checkout",
 ]
 
 MIDDLEWARE = [
@@ -146,6 +147,14 @@ LOGIN_URL = "/account/login"
 # Email setting
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+PAYPAL_RECEIVER_EMAIL = "sb-qeaz927843659@business.example.com"
+PAYPAL_TEST = True
+
+
+"""
+
+OVO JE ZA STRIPE PAYMENT METHOD U SLUCAJU PROMJENE SA PAYPALA
+
 # Stripe Payment
 os.environ.setdefault(
     "STRIPE_PUBLISHABLE_KEY",
@@ -156,3 +165,5 @@ STRIPE_SECRET_KEY = (
 )
 STRIPE_ENDPOINT_SECRET = "whsec_138d84b1f6855afec50a27ecbf36405b9cecb1443548ab82ccd508172af7df38"
 # stripe listen --forward-to Localhost:8000/payment/webhook/
+"""
+

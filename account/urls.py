@@ -56,6 +56,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="account/dashboard/delete_confirm.html"),
         name="delete_confirmation",
     ),
+    path("user_orders/", views.user_orders, name="user_orders"),
     # Addresses
     path("addresses/", views.view_address, name="addresses"),
     path("add_address/", views.add_address, name="add_address"),
